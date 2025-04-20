@@ -4,7 +4,7 @@ const questions = [
         answers: [
             {text: "Visual Novel(VN)", correct: false},
             {text: "Massively Multiplayer Online Role-Playing Game(MMORPG)", correct: true},
-            {text: "Tactical Role-Plaing Game(TRPG)", correct: false},
+            {text: "Tactical Role-Playing Game(TRPG)", correct: false},
             {text: "Role-Playing Game(RPG)", correct: false},
         ]
     },
@@ -27,10 +27,10 @@ const questions = [
         ]
     },
     {
-        question: "What is the JRPG/MMORPG game's class that primarily used for tanking?",
+        question: "What is the in-game job/class that primarily used for tanking?",
         answers: [
             {text: "Black Mage", correct: false},
-            {text: "Samurai", correct: flase},
+            {text: "Samurai", correct: false},
             {text: "Paladin", correct: true},
             {text: "Dragoon", correct: false},
         ]
@@ -45,3 +45,87 @@ const questions = [
         ]
     }
 ];
+const questionElement = document.getElementById("question");
+const answerButtons = document.getElementById("answer-buttons");
+const nextButton = document.getElementById("next-btn");
+
+let currentQuestionIndex = 0;
+let score = 0;
+
+function startQuiz(){
+    currentQuestionIndex = 0;
+    score = 0;
+    nextButton.innerHTML = "Next";
+    showQuestion();
+}
+
+function showQuestion(){
+    resetState();
+
+    let currentQuestion = questions[currentQuestionIndex];
+    let questionNo = currentQuestionIndex + 1;
+    questionElement.innerHTML = questionNo + ". " + currentQuestion.question;
+
+    currentQuestion.answers.forEach(answer => {
+        const button = document.createElement("button");
+        button.innerHTML = answer.text;
+        button.classList.add("btn");
+        answerButtons.appendChild(button);
+
+        if(answer.correct){
+            button.dataset.correct = answer.correct;
+        }
+        button.addEventListener("click", selectAnswer);
+    });
+}
+
+function resetState(){
+    nextButton.style.display = "none";
+    while(answerButtons.firstChild){
+        answerButtons.removeChild(answerButtons.firstChild);
+    }
+}
+
+function selectAnswer(e){
+    const selectedBtn = e.target;
+    const isCorrect = selectedBtn.dataset.correct === "true";
+    if(isCorrect){
+        selectedBtn.classList.add("correct");
+        score++;
+    }else{
+        selectedBtn.classList.add("incorrect");
+    }
+    Array.from(answerButtons.children).forEach(button => {
+        if(button.dataset.correct === "true"){
+            button.classList.add("correct");
+        }
+        button.disabled = true;
+    });
+    nextButton.style.display = "block";
+}
+
+function showScore(){
+    resetState();
+    questionElement.innerHTML = `You scored ${score} out of ${questions.length}!`;
+    nextButton.innerHTML = "Play Again";
+    nextButton.style.display = "block";
+}
+
+function handleNextButton(){
+    currentQuestionIndex++;
+    if(currentQuestionIndex < questions.length){
+        showQuestion();
+    }else{
+        showScore();
+    }
+}
+
+nextButton.addEventListener("click", ()=> {
+    if(currentQuestionIndex < questions.length){
+        handleNextButton();
+    }else{
+        startQuiz();
+    }
+});
+
+startQuiz();
