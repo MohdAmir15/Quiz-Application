@@ -1,3 +1,4 @@
+//a set of questions and answers for the quiz
 const questions = [
     {
         question: "What is the game genre that focuses on multiplayer element?",
@@ -52,6 +53,7 @@ const nextButton = document.getElementById("next-btn");
 let currentQuestionIndex = 0;
 let score = 0;
 
+//initial quiz function
 function startQuiz(){
     currentQuestionIndex = 0;
     score = 0;
@@ -79,6 +81,7 @@ function showQuestion(){
     });
 }
 
+//function when the all questions are answered and the next button is pressed
 function resetState(){
     nextButton.style.display = "none";
     while(answerButtons.firstChild){
@@ -86,6 +89,7 @@ function resetState(){
     }
 }
 
+//function when sellecting an answer whether the displayed answer is true or not
 function selectAnswer(e){
     const selectedBtn = e.target;
     const isCorrect = selectedBtn.dataset.correct === "true";
@@ -104,6 +108,7 @@ function selectAnswer(e){
     nextButton.style.display = "block";
 }
 
+//function to display the score after answering all questions
 function showScore(){
     resetState();
     questionElement.innerHTML = `You scored ${score} out of ${questions.length}!`;
@@ -111,6 +116,7 @@ function showScore(){
     nextButton.style.display = "block";
 }
 
+//function of the next button to navigate through set of question pages
 function handleNextButton(){
     currentQuestionIndex++;
     if(currentQuestionIndex < questions.length){
